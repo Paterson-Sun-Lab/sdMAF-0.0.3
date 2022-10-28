@@ -4,7 +4,7 @@ sdMAF 0.0.1 is a R based commend-line tool used to compute sex differences in al
 
 sdMAF is free and comes with ABSOLUTELY NO WARRANTY. 
 
-Details of the method can be found [here](https://journals.plos.org/plosgenetics/article/authors?id=10.1371/journal.pgen.1010231). 
+Details of the method can be found [here](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi). 
 
 Copyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. 
 
