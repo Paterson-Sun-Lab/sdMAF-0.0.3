@@ -49,7 +49,7 @@ Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
     --mac <minimum count>
                           Minimum allele count filter. Default 5.
 
-## Examples
+## Example
 
     Rscript sdMAF.R \
             -f /female/pilot.txt \
