@@ -25,7 +25,7 @@ Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-    PROGRAM [-h] -f <filename> -m <filename> [--version]
+    PROGRAM [-h] -f <filename>  -m <filename>  [--version]
                  [--bim <filename>] [-o <filename>] [--multi-allelic]
                  [--mac <minimum count>]
 
