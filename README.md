@@ -4,11 +4,11 @@ sdMAF is a R based commend-line tool used to compute sex differences in allele f
 
 sdMAF is free and comes with ABSOLUTELY NO WARRANTY. 
 
-Details of the method can be found [here](https://journals.plos.org/plosgenetics/article/authors?id=10.1371/journal.pgen.1010231) 
+Details of the method can be found [here](https://journals.plos.org/plosgenetics/article/authors?id=10.1371/journal.pgen.1010231). 
 
 Copyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. 
 
-Report bugs to zeya [dot] chen [at] sickkids [dot] ca
+Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
 
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
