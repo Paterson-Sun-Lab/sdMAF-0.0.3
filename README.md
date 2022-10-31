@@ -1,6 +1,6 @@
-# sdMAF
+# sdMAF 0.0.2 Manual
 
-sdMAF 0.0.1 is a R based commend-line tool used to compute sex differences in allele frequencies. 
+sdMAF 0.0.2 is a R based commend-line tool used to compute sex differences in allele frequencies. 
 
 sdMAF is free and comes with ABSOLUTELY NO WARRANTY. 
 
@@ -25,9 +25,9 @@ Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-    PROGRAM [-h] -f <filename>  -m <filename>  [--version]
-                 [--bim <filename>] [-o <filename>] [--multi-allelic]
-                 [--mac <minimum count>]
+    usage: sdMAF -f <filename>  -m <filename>  [-h] [--version]
+             [--bim <filename>] [-o <filename>] [-l <filename>]
+             [--multi-allelic] [--mac <minimum count>]
 
 ## Required Arguments 
     -f <filename>, --female <filename>
@@ -44,6 +44,9 @@ Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
     -o <filename>, --out <filename>
                           Specify output file name and address. Default
                           autosomal.sdMAF.
+    -l <filename>, --log <filename>
+                          Log file name and address. Default 'YOURINPUTin--
+                          out'_sdMAF.log.
     --multi-allelic       Indicate whether to keep multi-allelic SNPs in the
                           results or not. Default FALSE.
     --mac <minimum count>
@@ -57,24 +60,41 @@ Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
             --mac 10 \
             -o pilot_test
             
+    ########## sdMAF 0.0.2 ########## 
+    An R based commend-line tool used to compute sex differences in allele frequencies.
+    sdMAF is free and comes with ABSOLUTELY NO WARRANTY.
+    Details of the method can be found at: 
+    https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi  
+    Copyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. 
+    Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
     Checking if inputs are valid.
     Autosomal/NPR region detected based on male genotype count file.
     No bim file provided. OK unless ID column from genotype file not all in chr:bp:A1:A2 form.
     Input checkers all passed, now applying filters.
-    Keeping 487 biallelic SNPs out of 499 total SNPs from Input.
-    Keeping 184 SNPs out of 487 SNPs based on a minor allele count filter of 10.
+    Keeping 571419 biallelic SNPs out of 613853 total SNPs from Input.
+    Keeping 51805 SNPs out of 571419 SNPs based on a minor allele count filter of 10.
     All filters applied, now computing sdMAF!
-    Now calculated 10% (19/184).
-    Now calculated 20% (37/184).
-    Now calculated 30% (56/184).
-    Now calculated 40% (74/184).
-    Now calculated 50% (92/184).
-    Now calculated 60% (111/184).
-    Now calculated 70% (129/184).
-    Now calculated 80% (148/184).
-    Now calculated 90% (166/184).
+    Now calculated 5% (2591/51805). 
+    Now calculated 10% (5181/51805).
+    Now calculated 15% (7771/51805). 
+    Now calculated 20% (10361/51805). 
+    Now calculated 25% (12952/51805). 
+    Now calculated 30% (15542/51805). 
+    Now calculated 35% (18132/51805). 
+    Now calculated 40% (20722/51805). 
+    Now calculated 45% (23313/51805). 
+    Now calculated 50% (25903/51805). 
+    Now calculated 55% (28493/51805). 
+    Now calculated 60% (31084/51805). 
+    Now calculated 65% (33674/51805). 
+    Now calculated 70% (36264/51805). 
+    Now calculated 75% (38854/51805). 
+    Now calculated 80% (41444/51805). 
+    Now calculated 85% (44035/51805). 
+    Now calculated 90% (46625/51805). 
+    Now calculated 95% (49215/51805). 
     Finito !
-    Writing results to pilot_test.sdMAF
+    Writing results to pilot_test.sdMAF and logs to pilot_test_sdMAF.log.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
