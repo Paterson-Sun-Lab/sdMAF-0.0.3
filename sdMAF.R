@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# Copyright 2022 Zeya Chen <zeya.chen@sickkids.ca>, Zhong Wang, Lei Sun, Andrew D. Paterson 
+# Copyright 2022 Zeya Chen <zeya.chen@sickkids.ca>, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson 
 #
 #  This file is free software: you may copy, redistribute and/or modify it  
 #  under the terms of the GNU General Public License as published by the  
@@ -20,6 +20,7 @@ suppressPackageStartupMessages(library("argparse"))
 
 # create parser object
 parser <- ArgumentParser(
+  prog="sdMAF",
   description=paste0("sdMAF ",.VERSION," is a R based commend-line tool used to compute sex differences in allele frequencies. sdMAF is free and comes with ABSOLUTELY NO WARRANTY. Details of the method can be found https://journals.plos.org/plosgenetics/article/authors?id=10.1371/journal.pgen.1010231"),
   epilog="Copyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. Report bugs to zeya [dot] chen [at] sickkids [dot] ca"
   )
@@ -37,14 +38,16 @@ requiredNamed$add_argument("-m","--male", type="character",
                            metavar = "<filename>")
 
 # optional arguments
-optionalNamed = parser$add_argument_group('OPtional Arguments')
+optionalNamed = parser$add_argument_group('Optional Arguments')
 optionalNamed$add_argument("--version", action="store_true",
                     help="Print the version of this tool and exit.")
 optionalNamed$add_argument("--bim", type="character", 
                     help = "PLINK format bim file address used to extract base pair position. Optional if ID in .gcount file are all chr:bp:a1:a2.",
                     metavar = "<filename>")
 optionalNamed$add_argument("-o","--out", type="character", default="autosomal", 
-                    help = "Output file name and address. Default autosomal.sdMAF in current directory. Output will look like YOURINPUT.sdMAF and YOURINPUT_sdMAF.log", metavar = "<filename>")
+                    help = "Output file name and address. Default autosomal.sdMAF in current directory. Output will look like YOURINPUT.sdMAF", metavar = "<filename>")
+optionalNamed$add_argument("-l","--log", type="character",  
+                    help = "Log file name and address. Default 'YOURINPUTin--out'_sdMAF.log.", metavar = "<filename>")
 optionalNamed$add_argument("--multi-allelic", action="store_true",default=FALSE, 
                     help = "Indicate whether to keep multi-allelic SNPs in the results or not. Default FALSE.")
 optionalNamed$add_argument("--mac", type="integer", default=5,
@@ -55,8 +58,15 @@ optionalNamed$add_argument("--mac", type="integer", default=5,
 # otherwise if options not found on command line then set defaults, 
 args <- parser$parse_args()
 
+#assemble log file address
+if (is.null(args$log)){
+  logs.nm <- paste0(args$out,"_sdMAF.log")
+} else {
+  logs.nm <- paste0(args$log,"_sdMAF.log")
+}
+
 #Starts logging
-sink(paste0(args$out,"_sdMAF.log"),split = T)
+sink(logs.nm,split = T)
 
 cat(paste0("########## sdMAF ",.VERSION," ########## \nAn R based commend-line tool used to compute sex differences in allele frequencies.\nsdMAF is free and comes with ABSOLUTELY NO WARRANTY.\nDetails of the method can be found at: \nhttps://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi  \nCopyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. \nReport bugs to zeya [dot] chen [at] sickkids [dot] ca.\n "))
 
@@ -67,7 +77,7 @@ if (isTRUE(args[["version"]])){
     quit(save = "no", status = 0)
 }
 
-cat("Checking if inputs are valid.\n")
+cat(paste0("############################## \nChecking if inputs are valid.","\n"))
 # print Error and exit early if no female genotype count found.
 if (!file.exists(args[["female"]])){
   cat(paste0("Error: no female genotype count file found at",args[["female"]],".","\n"))
@@ -87,7 +97,7 @@ ma <- read.table(args$male)
 
 # print Error and exit early if female male file dimension not matching or col number is not 10.
 if (nrow(fe) != nrow(ma) | ncol(fe) != 10 | ncol(fe) != 10){
-  cat(paste0("Error: genotype count files dimensions are incorrect or row numbers not equal.", "\n"))
+  cat(paste0("Error: genotype count files dimensions are incorrect or row numbers not equal between sex.", "\n"))
   sink()
   quit(save = "no", status = 0)
 }
@@ -145,12 +155,10 @@ wald.1df.hwd.xchr <- function(x)
 
 # convert time from seconds to day hour minute seconds.
 dhms <- function(t){
-  paste(t %/% (60*60*24), "days" 
-        ,paste(formatC(t %/% (60*60) %% 24, width = 2, format = "d", flag = "0"),"hours"
+        paste(formatC(t %/% (60*60), width = 2, format = "d", flag = "0"),"hours"
                ,formatC(t %/% 60 %% 60, width = 2, format = "d", flag = "0"),"minutes"
                ,formatC(t %% 60, width = 2, format = "d", flag = "0"),"seconds"
         )
-  )
 }
 
 loop_func <- function(df,reg){
@@ -165,12 +173,14 @@ loop_func <- function(df,reg){
   f <- get(fl[reg]) #assign which function to be used based on input
   LOG10P <- c()
   j = 1
+  t=0
   t1 = Sys.time()
   for (i in 1:nr) {
     LOG10P <- c(LOG10P,f(df[i,5:10])) #appending P value
     if (i == snpc[j]) {
-      t2 = Sys.time()
-      if (i == nr) {cat(paste0("Finito !", "\n"))} else {cat(paste0("Now calculated ", prog[j]," (",i,"/",nr,"). Estimated time remaining ",dhms(as.numeric((t2-t1)/frac[j]*(1-frac[j]))),".\n"))} #print % of calculation done
+      t = as.numeric(Sys.time()-t1) + t
+      t1 = Sys.time()
+      if (i == nr) {cat(paste0("Finito !", "\n"))} else {cat(paste0("Now calculated ", prog[j]," (",i,"/",nr,"). Estimated time remaining ",dhms(t/frac[j]*(1-frac[j])),".\n"))} #print % of calculation done
       j = j + 1
     }
   }
@@ -179,7 +189,14 @@ loop_func <- function(df,reg){
 
 if (is.null(args$bim)) {
   cat(paste0("No bim file provided. OK unless ID column from genotype file not all in chr:bp:A1:A2 form.","\n"))
-} else {ch <- read.table(args$bim,header =F)} # since --geno-couts does not include physical position.
+} else {
+  ch <- read.table(args$bim,header = F)
+  if (nrow(ch) != nrow(chrom)) {
+    cat(paste0("Error: genotype count file and bim file not having unequal number of rows.", "\n"))
+    sink()
+    quit(save = "no", status = 0)
+  }
+} # since --geno-couts does not include physical position.
 
 # merge fe and ma to one data frame
 if (region==1) {
@@ -187,7 +204,7 @@ if (region==1) {
 } else {chrom <- cbind(fe[,1:7],ma[,8],0,ma[,9])}
 
 names(chrom)[3:10] <- c("A1","A2","F_A1A1","F_A1A2","F_A2A2","M_A1A1.A1","M_A1A2","M_A2A2.A2")
-cat(paste0("Input checkers all passed, now applying filters.","\n"))
+cat(paste0("############################## \nInput checkers all passed, now applying filters.","\n"))
 
 #filter for only biallelic variants
 if (isTRUE(args[["multi-allelic"]])){
@@ -207,7 +224,7 @@ cat(paste0("All filters applied, now computing sdMAF!","\n"))
 chromwithP <- loop_func(chrom,region)
 
 if (!is.null(args$bim)) {
-  chromwithP$BP <- ch$V4 # add BP to results from bim file
+  chromwithP$BP <- ch$V4[match(chromwithP$ID,chrom$ID)] # add BP to results from bim file
 } else { chromwithP$BP <- sapply(strsplit(chromwithP$ID,":"), `[`, 2) } # get BP from ID
 
 chromwithP$Mmissing <- ma$MISSING_CT[match(chromwithP$ID,ma$ID)]
@@ -219,14 +236,15 @@ chromwithP$Ffreq <- (0.5*chromwithP$F_A1A2+chromwithP$F_A2A2)/(chromwithP$F_A1A1
 chromwithP$Mfreq <- (0.5*chromwithP$M_A1A2+chromwithP$M_A2A2)/(chromwithP$M_A1A1+chromwithP$M_A1A2+chromwithP$M_A2A2)
 chromwithP$DIFmaf <- ifelse(chromwithP$Ffreq>0.5,chromwithP$Mfreq-chromwithP$Ffreq,chromwithP$Ffreq-chromwithP$Mfreq)
 
-# writing results
+# assemble the output file address
 f.nm <- paste0(args$out,".sdMAF")
 
-# break it down into finer steps
 invisible(file.create(f.nm))
-f <- file(f.nm, open="w") # or open="a" if appending
+f <- file(f.nm, open="w") # 
 
-cat(paste0("Writing results to ",f.nm," and log file to ",args$out,"_sdMAF.log.","\n"))
+cat(paste0("Writing results to ",f.nm," and logs to ",logs.nm,"\n"))
+
 write.table(chromwithP, file = f, sep = "\t", quote = F, append=FALSE, row.names = FALSE, col.names=TRUE)
 
+sink()
 close(f)
