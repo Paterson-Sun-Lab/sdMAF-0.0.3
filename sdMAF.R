@@ -40,19 +40,21 @@ requiredNamed$add_argument("-m","--male", type="character",
 # optional arguments
 optionalNamed = parser$add_argument_group('Optional Arguments')
 optionalNamed$add_argument("--version", action="store_true",
-                    help="Print the version of this tool and exit.")
-optionalNamed$add_argument("--bim", type="character", 
-                    help = "PLINK format bim file address used to extract base pair position. Optional if ID in .gcount file are all chr:bp:a1:a2.",
-                    metavar = "<filename>")
+                           help="Print the version of this tool and exit.")
+optionalNamed$add_argument("--bim", type="character",
+                           help = "PLINK format bim file address used to extract base pair position. Optional if ID in .gcount file are all chr:bp:a1:a2.",
+                           metavar = "<filename>")
 optionalNamed$add_argument("-o","--out", type="character", default="autosomal", 
-                    help = "Output file name and address. Default autosomal.sdMAF in current directory. Output will look like YOURINPUT.sdMAF", metavar = "<filename>")
-optionalNamed$add_argument("-l","--log", type="character",  
-                    help = "Log file name and address. Default 'YOURINPUTin--out'_sdMAF.log.", metavar = "<filename>")
-optionalNamed$add_argument("--multi-allelic", action="store_true",default=FALSE, 
-                    help = "Indicate whether to keep multi-allelic SNPs in the results or not. Default FALSE.")
+                           help = "Output file name and address. Default autosomal.sdMAF in current directory. Output will look like YOURINPUT.sdMAF", metavar = "<filename>")
+optionalNamed$add_argument("-l","--log", type="character",
+                           help = "Log file name and address. Default 'YOURINPUTin--out'_sdMAF.log.", metavar = "<filename>")
+optionalNamed$add_argument("--multi-allelic", action="store_true",default=FALSE,
+                           help = "Include to keep multi-allelic SNPs in the results or not.")
 optionalNamed$add_argument("--mac", type="integer", default=5,
-                    help = "Sex specific minimum allele count filter. Default 5.",
-                    metavar = "<minimum count>")
+                           help = "Sex combined minimum allele count filter. Variant with minor allele count less than input will be filtered out. Default 5.",
+                           metavar = "<minimum count>")
+optionalNamed$add_argument("--sex-specific", action="store_true", default=FALSE,
+                           help = "Include to use sex specific minimum allele count filter for both males and females.")
   
 # get command line options, if help option encountered print help and exit,
 # otherwise if options not found on command line then set defaults, 
@@ -77,23 +79,32 @@ if (isTRUE(args[["version"]])){
     quit(save = "no", status = 0)
 }
 
-cat(paste0("############################## \nChecking if inputs are valid.","\n"))
+cat(paste0("##############################", "\nChecking if inputs are valid.","\n"))
 # print Error and exit early if no female genotype count found.
 if (!file.exists(args[["female"]])){
-  cat(paste0("Error: no female genotype count file found at",args[["female"]],".","\n"))
+  cat(paste0("Error: no female genotype count file found at ",args[["female"]],".","\n"))
   sink()
   quit(save = "no", status = 0)
 }
 
 # print Error and exit early if no male genotype count found.
 if (!file.exists(args[["male"]])){
-  cat(paste0("Error: no male genotype count file found at",args[["male"]],".","\n"))
+  cat(paste0("Error: no male genotype count file found at ",args[["male"]],".","\n"))
   sink()
   quit(save = "no", status = 0)
 }
 
+# loading gcount files and logging some info
+cat(paste0("Loading female gcount file found from ",args[["female"]],".","\n"))
 fe <- read.table(args$female)
+names(fe) <- c("CHROM","ID","REF","ALT","HOM_REF_CT","HET_REF_ALT_CTS","TWO_ALT_GENO_CTS","HAP_REF_CT","HAP_ALT_CTS","MISSING_CT")
+cat(paste0(sum(fe[1,5:10])," females detected from female gcount file.","\nNumber of SNPs per chromosome from the gcount file:"))
+table(fe$CHROM)
+cat(paste0("Loading male genotype count file found from ",args[["male"]],".","\n"))
 ma <- read.table(args$male)
+names(ma) <- c("CHROM","ID","REF","ALT","HOM_REF_CT","HET_REF_ALT_CTS","TWO_ALT_GENO_CTS","HAP_REF_CT","HAP_ALT_CTS","MISSING_CT")
+cat(paste0(sum(ma[1,5:10])," males detected from male gcount file.","\nNumber of SNPs per chromosome from the gcount file:"))
+table(ma$CHROM)
 
 # print Error and exit early if female male file dimension not matching or col number is not 10.
 if (nrow(fe) != nrow(ma) | ncol(fe) != 10 | ncol(fe) != 10){
@@ -102,9 +113,6 @@ if (nrow(fe) != nrow(ma) | ncol(fe) != 10 | ncol(fe) != 10){
   quit(save = "no", status = 0)
 }
 
-
-names(fe) <- c("CHROM","ID","REF","ALT","HOM_REF_CT","HET_REF_ALT_CTS","TWO_ALT_GENO_CTS","HAP_REF_CT","HAP_ALT_CTS","MISSING_CT")
-names(ma) <- c("CHROM","ID","REF","ALT","HOM_REF_CT","HET_REF_ALT_CTS","TWO_ALT_GENO_CTS","HAP_REF_CT","HAP_ALT_CTS","MISSING_CT")
 
 # print Error and exit early if male genotype count file is passed to --female.
 if (nrow(fe) != sum(fe$HAP_REF_CT + fe$HAP_ALT_CT == 0)){
@@ -121,11 +129,11 @@ if (nrow(fe) != sum(fe$ID == ma$ID)){
 }
 
 # check the region of SNPs if they are autosomal/PAR or ChrX NPR based on input. region = 1 for autosomal/PAR and 2 for NPR. 
-region <- 1
+region <- 2
 if (nrow(ma) == sum(ma$HAP_REF_CT + ma$HAP_ALT_CT != 0)){
-  region <- 2
+  region <- 1
   cat(paste0("ChrX NPR region detected based on male genotype count file.", "\n"))
-} else {cat(paste0("Autosomal/NPR region detected based on male genotype count file.", "\n"))}
+} else {cat(paste0("Autosomal/PAR region detected based on male genotype count file.", "\n"))}
 
 wald.1df.hwd.auto <- function(x)
   # 'Wald' type, 1 d.f. assuming HWD, Autosomal 
@@ -153,23 +161,22 @@ wald.1df.hwd.xchr <- function(x)
   -pchisq(as.numeric(stat),df=1,lower.tail = F,log.p=T)/log(10)     # -log10
 }
 
-# convert time from seconds to day hour minute seconds.
+# convert time from seconds to hour minute seconds.
 dhms <- function(t){
-        paste(formatC(t %/% (60*60), width = 2, format = "d", flag = "0"),"hours"
-               ,formatC(t %/% 60 %% 60, width = 2, format = "d", flag = "0"),"minutes"
-               ,formatC(t %% 60, width = 2, format = "d", flag = "0"),"seconds"
-        )
+        paste(formatC(t %/% (60*60), width = 2, format = "d", flag = "0"),"hours",
+              formatC(t %/% 60 %% 60, width = 2, format = "d", flag = "0"),"minutes",
+              formatC(t %% 60, width = 2, format = "d", flag = "0"),"seconds")
 }
 
 loop_func <- function(df,reg){
   # df dataframe to be fed into wald.1df.hwd function.
-  # reg regions 1 for autosomal/PAR and 2 for NPR.
+  # reg regions 2 for autosomal/PAR and 1 for NPR.
   # pre-calculating number of snps and initialize three lists late will be used for messages.
   nr <- nrow(df) 
   frac <- seq(0,1,0.05)[-1]
   prog <- paste0(as.character(frac*100),"%")
   snpc <- ceiling(frac*nr)
-  fl <- c("wald.1df.hwd.auto","wald.1df.hwd.xchr")
+  fl <- c("wald.1df.hwd.xchr","wald.1df.hwd.auto")
   f <- get(fl[reg]) #assign which function to be used based on input
   LOG10P <- c()
   j = 1
@@ -199,42 +206,49 @@ if (is.null(args$bim)) {
 } # since --geno-couts does not include physical position.
 
 # merge fe and ma to one data frame
-if (region==1) {
+if (region==2) {
   chrom <- cbind(fe[,1:7],ma[,5:7])
 } else {chrom <- cbind(fe[,1:7],ma[,8],0,ma[,9])}
 
 names(chrom)[3:10] <- c("A1","A2","F_A1A1","F_A1A2","F_A2A2","M_A1A1.A1","M_A1A2","M_A2A2.A2")
 cat(paste0("############################## \nInput checkers all passed, now applying filters.","\n"))
 
+
+if (!is.null(args$bim)) {
+  if (ncol(ch) == 1) {
+    chrom$BP <- ch$V1[match(chrom$ID,chrom$ID)]
+  } else {chrom$BP <- ch$V4[match(chrom$ID,chrom$ID)]} # add BP to results from bim file
+} else { chrom$BP <- sapply(strsplit(chrom$ID,":"), `[`, 2) } # get BP from ID
+
 #filter for only biallelic variants
 if (isTRUE(args[["multi-allelic"]])){
 } else {
-  bia <- nchar(chrom$A2)==1&nchar(chrom$A1)==1
+  bia <- nchar(chrom$A2)==1&nchar(chrom$A1)==1&(!(duplicated(chrom$BP)|duplicated(chrom$BP,fromLast = T)))
   cat(paste0("Keeping ", sum(bia)," biallelic SNPs out of ", nrow(chrom)," total SNPs from Input.","\n"))
   chrom <- chrom[bia,]
 }
 
 # getting a list of whether each SNP passes mac keeping SNPs that are 2AA + Aa and Aa + 2aa is > MAC in both sex
-macf <- (2*chrom$M_A1A1.A1+chrom$M_A1A2 >= args$mac) & (chrom$M_A1A2+2*chrom$M_A2A2.A2 >= args$mac) & (2*chrom$F_A1A1+chrom$F_A1A2 >= args$mac) & (chrom$F_A1A2+2*chrom$F_A2A2 >= args$mac)
-cat(paste0("Keeping ", sum(macf)," SNPs out of ", nrow(chrom)," SNPs based on a minor allele count filter of ",args$mac,".\n"))
+# for sex combined it will be 2AAf + Aaf + region*AAm + Aam and Aaf + 2aaf + Aam + region*aam is >= MAC, region is 1 for NPR and 2 for PAR.
+if (isTRUE(args[["sex-specific"]])){
+  macf <- (region*chrom$M_A1A1.A1+chrom$M_A1A2 >= args$mac) & (chrom$M_A1A2+region*chrom$M_A2A2.A2 >= args$mac) & (2*chrom$F_A1A1+chrom$F_A1A2 >= args$mac) & (chrom$F_A1A2+2*chrom$F_A2A2 >= args$mac)
+} else { macf <- (region*chrom$M_A1A1.A1+chrom$M_A1A2+2*chrom$F_A1A1+chrom$F_A1A2 >= args$mac) & (chrom$M_A1A2+region*chrom$M_A2A2.A2+chrom$F_A1A2+2*chrom$F_A2A2 >= args$mac)
+}
+cat(paste0("Keeping ", sum(macf)," SNPs out of ", nrow(chrom)," SNPs based on a ",ifelse(args[["sex-specific"]],"sex specific","sex combined")," minor allele count filter of ",args$mac,".\n"))
 chrom <- chrom[macf,]
 
 cat(paste0("All filters applied, now computing sdMAF!","\n"))
 # computing p value for sdMAF 
 chromwithP <- loop_func(chrom,region)
 
-if (!is.null(args$bim)) {
-  chromwithP$BP <- ch$V4[match(chromwithP$ID,chrom$ID)] # add BP to results from bim file
-} else { chromwithP$BP <- sapply(strsplit(chromwithP$ID,":"), `[`, 2) } # get BP from ID
-
 chromwithP$Mmissing <- ma$MISSING_CT[match(chromwithP$ID,ma$ID)]
 chromwithP$Fmissing <- fe$MISSING_CT[match(chromwithP$ID,fe$ID)]
-chromwithP <- chromwithP[,c(1:4,12:14,5:11)] #rearrange
+chromwithP <- chromwithP[,c(1:4,11,13:14,5:10,12)] #rearrange
 
 # compute allele frequency
 chromwithP$Ffreq <- (0.5*chromwithP$F_A1A2+chromwithP$F_A2A2)/(chromwithP$F_A1A1+chromwithP$F_A1A2+chromwithP$F_A2A2)
 chromwithP$Mfreq <- (0.5*chromwithP$M_A1A2+chromwithP$M_A2A2)/(chromwithP$M_A1A1+chromwithP$M_A1A2+chromwithP$M_A2A2)
-chromwithP$DIFmaf <- ifelse(chromwithP$Ffreq>0.5,chromwithP$Mfreq-chromwithP$Ffreq,chromwithP$Ffreq-chromwithP$Mfreq)
+chromwithP$DIFmaf <- ifelse((chromwithP$F_A2A2+chromwithP$M_A2A2)>(chromwithP$F_A1A1+chromwithP$M_A1A1),chromwithP$Mfreq-chromwithP$Ffreq,chromwithP$Ffreq-chromwithP$Mfreq)
 
 # assemble the output file address
 f.nm <- paste0(args$out,".sdMAF")
