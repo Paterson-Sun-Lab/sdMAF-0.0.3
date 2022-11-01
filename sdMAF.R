@@ -70,7 +70,7 @@ if (is.null(args$log)){
 #Starts logging
 sink(logs.nm,split = T)
 
-cat(paste0("########## sdMAF ",.VERSION," ########## \nAn R based commend-line tool used to compute sex differences in allele frequencies.\nsdMAF is free and comes with ABSOLUTELY NO WARRANTY.\nDetails of the method can be found at: \nhttps://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi  \nCopyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. \nReport bugs to zeya [dot] chen [at] sickkids [dot] ca.\n "))
+cat(paste0("########## sdMAF ",.VERSION," ########## \nAn R based commend-line tool used to compute sex differences in allele frequencies.\nsdMAF is free and comes with ABSOLUTELY NO WARRANTY.\nDetails of the method can be found at: \nhttps://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi  \nCopyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. \nReport bugs to zeya [dot] chen [at] sickkids [dot] ca.\n"))
 
 # print version and exit early if  --version was passed
 if (isTRUE(args[["version"]])){
@@ -221,7 +221,7 @@ if (!is.null(args$bim)) {
 } else { chrom$BP <- sapply(strsplit(chrom$ID,":"), `[`, 2) } # get BP from ID
 
 #filter for only biallelic variants
-if (isTRUE(args[["multi-allelic"]])){
+if (isTRUE(args[["multi_allelic"]])){
 } else {
   bia <- nchar(chrom$A2)==1&nchar(chrom$A1)==1&(!(duplicated(chrom$BP)|duplicated(chrom$BP,fromLast = T)))
   cat(paste0("Keeping ", sum(bia)," biallelic SNPs out of ", nrow(chrom)," total SNPs from Input.","\n"))
@@ -230,11 +230,11 @@ if (isTRUE(args[["multi-allelic"]])){
 
 # getting a list of whether each SNP passes mac keeping SNPs that are 2AA + Aa and Aa + 2aa is > MAC in both sex
 # for sex combined it will be 2AAf + Aaf + region*AAm + Aam and Aaf + 2aaf + Aam + region*aam is >= MAC, region is 1 for NPR and 2 for PAR.
-if (isTRUE(args[["sex-specific"]])){
+if (isTRUE(args[["sex_specific"]])){
   macf <- (region*chrom$M_A1A1.A1+chrom$M_A1A2 >= args$mac) & (chrom$M_A1A2+region*chrom$M_A2A2.A2 >= args$mac) & (2*chrom$F_A1A1+chrom$F_A1A2 >= args$mac) & (chrom$F_A1A2+2*chrom$F_A2A2 >= args$mac)
 } else { macf <- (region*chrom$M_A1A1.A1+chrom$M_A1A2+2*chrom$F_A1A1+chrom$F_A1A2 >= args$mac) & (chrom$M_A1A2+region*chrom$M_A2A2.A2+chrom$F_A1A2+2*chrom$F_A2A2 >= args$mac)
 }
-cat(paste0("Keeping ", sum(macf)," SNPs out of ", nrow(chrom)," SNPs based on a ",ifelse(args[["sex-specific"]],"sex specific","sex combined")," minor allele count filter of ",args$mac,".\n"))
+cat(paste0("Keeping ", sum(macf)," SNPs out of ", nrow(chrom)," SNPs based on a ",ifelse(isTRUE(args[["sex_specific"]]),"sex specific","sex combined")," minor allele count filter of ",args$mac,".\n"))
 chrom <- chrom[macf,]
 
 cat(paste0("All filters applied, now computing sdMAF!","\n"))
