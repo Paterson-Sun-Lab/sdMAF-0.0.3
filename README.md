@@ -33,9 +33,9 @@ Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
 Only [gcount](https://www.cog-genomics.org/plink/2.0/formats#gcount:~:text=FST%20estimate-,.gcount,-(genotype%20count%20report)) files required.
 
     -f <filename>, --female <filename>
-                        Female genotype count file produced by PLINK.
+                          Female genotype count file produced by PLINK.
     -m <filename>, --male <filename>
-                        Male genotype count file produced by PLINK.
+                          Male genotype count file produced by PLINK.
 ## Optional Arguments
     
     -h, --help            show this help message and exit
@@ -54,7 +54,9 @@ Only [gcount](https://www.cog-genomics.org/plink/2.0/formats#gcount:~:text=FST%2
     --sex-specific        Include to use sex specific minimum allele count
                           filter for both males and females.
     --mac <minimum count>
-                          Minimum allele count filter. Default 5.
+                          Sex combined minimum allele count filter. Variant with
+                          minor allele count less than input will be filtered
+                          out. Default 5.
 
 ## Quick Start-Up Guide
 
