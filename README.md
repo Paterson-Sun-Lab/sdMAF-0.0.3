@@ -60,7 +60,11 @@ Only [gcount](https://www.cog-genomics.org/plink/2.0/formats#gcount:~:text=FST%2
 
 ## Quick Start-Up Guide
 
-We will batch run entire genome.
+If you have a fairly large cohort, have access to clusters, and want to batch process entire genome; this guide will teach you how to parallelly compute sdMAF at each chromosome. If not, you can check stream processing single file under example below. 
+
+Following bash scripts assume your bed bim fam files for all chromosomes are in same folder and have similar naming except chromosome number. chrX PAR1/PAR2 is assumed to be chrXY and chrX NPR is assumed to be chrX, if not change it accordingly. sdMAF 0.0.3 accepts a mixture of NPR/PAR variants, so PAR1/PAR2 and NPR in one file is okay as long as PAR1/PAR2 have different chromosome codes (PAR1/PAR2 from plink2 --split-par and XY from plink1.9 --split-x). If your genotype files are not in plink format, just change the plink code. 
+
+All job commends are under Moab/Torque environment.
     
     ####Make your own Analysis.sh file by filling in these address.
 
@@ -90,9 +94,9 @@ We will batch run entire genome.
     
     #### on HPF
 
-    #Autosomes
-    cd /WhereAnalysis.shLocated
     
+    cd /WhereAnalysis.shLocated
+    #Autosomes
     let a=1
     while [ $a -le 22 ]
     do
@@ -104,7 +108,7 @@ We will batch run entire genome.
     qsub  -v PARAM1=X Analysis.sh
     qsub  -v PARAM1=XY Analysis.sh
 
-    #Merging Results After All Batch Jobs Completed.
+    #Merging results after all batch jobs completed.
     let a=1
     head -n 1 /YourOutFolder/OutFileNamechr${a}.sdMAF > header.txt
     while [ $a -le 22 ]
