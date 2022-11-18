@@ -1,6 +1,6 @@
-# sdMAF 0.0.2 Manual
+# sdMAF 0.0.3 Manual
 
-sdMAF 0.0.2 is a R based commend-line tool used to compute sex differences in allele frequencies. 
+sdMAF 0.0.3 is a R based commend-line tool used to compute sex differences in allele frequencies. 
 
 sdMAF is free and comes with ABSOLUTELY NO WARRANTY. 
 
@@ -27,9 +27,11 @@ Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
 
     usage: sdMAF -f <filename>  -m <filename>  [-h] [--version]
              [--bim <filename>] [-o <filename>] [-l <filename>]
-             [--multi-allelic] [--mac <minimum count>]
+             [--multi-allelic] [--sex-specific] [--mac <minimum count>]
 
 ## Required Arguments 
+Only [gcount](https://www.cog-genomics.org/plink/2.0/formats#gcount:~:text=FST%20estimate-,.gcount,-(genotype%20count%20report)) files required.
+
     -f <filename>, --female <filename>
                         Female genotype count file produced by PLINK.
     -m <filename>, --male <filename>
@@ -49,52 +51,145 @@ Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
                           out'_sdMAF.log.
     --multi-allelic       Indicate whether to keep multi-allelic SNPs in the
                           results or not. Default FALSE.
+    --sex-specific        Include to use sex specific minimum allele count
+                        filter for both males and females.
     --mac <minimum count>
                           Minimum allele count filter. Default 5.
 
-## Example
+## Quick Start-Up Guide
+
+We will batch run entire genome.
+    
+    #### make your own Analysis.sh file by filling in these address
+
+    #PBS -l vmem=30g,mem=30g
+    #PBS -l walltime=24:00:00
+
+    #PBS -o /YourOutFolder
+    #PBS -e /YourErrorFolder
+
+    #change to current work directory
+    cd /YourWorkDirectory
+
+    chr=$PARAM1
+    
+    module load plink2
+    
+    plink2 --bfile /YourBedFileFolder/BedFileNamechr${chr} --geno-counts --keep-males --out /YourMaleGcountFolder/chr${chr}
+    plink2 --bfile /YourBedFileFolder/BedFileNamechr${chr} --geno-counts --keep-females --out /YourFemaleGcountFolder/chr${chr}
+
+    module load R
 
     Rscript sdMAF.R \
-            -f /female/pilot.txt \
-            -m /male/pilot.txt \
+    -f /YourMaleGcountFolder/chr${chr} \
+    -m /YourMaleGcountFolder/chr${chr} \
+    --mac 10 \
+    -o /YourOutFolder/OutFileNamechr${chr} \
+    -l /YourLogFolder/LogFileNamechr${chr}
+    
+    #### on HPF
+
+    #Autosomes
+    cd /WhereAnalysis.shLocated
+    
+    let a=1
+    while [ $a -le 22 ]
+    do
+        qsub  -v PARAM1=$a Analysis.sh             
+        let a=$a+1
+    done
+    
+    #Caution! Check naming of PAR/NPR regions in your Bed files before using this.
+    qsub  -v PARAM1=X Analysis.sh
+    qsub  -v PARAM1=XY Analysis.sh
+
+    #Merging Results After All Batch Jobs Completed
+    let a=1
+    head -n 1 /YourOutFolder/OutFileNamechr${a}.sdMAF > header.txt
+    while [ $a -le 22 ]
+       do
+            echo "$(tail -n +2 /YourOutFolder/OutFileNamechr${a}.sdMAF)" > /YourOutFolder/OutFileNamechr${a}.sdMAF      
+        let a=$a+1
+    done
+    echo "$(tail -n +2 /YourOutFolder/OutFileNamechrX.sdMAF)" > /YourOutFolder/OutFileNamechrX.sdMAF
+    echo "$(tail -n +2 /YourOutFolder/OutFileNamechrXY.sdMAF)" > /YourOutFolder/OutFileNamechrXY.sdMAF
+    cat header.txt /YourOutFolder/OutFileNamechr* > /YourOutFolder/OutFileName_chr1to23sdMAF.txt
+    
+    
+## Example 
+
+    #Use plink to produce gcount files
+    plink2 --bfile pilot --geno-counts --keep-males --out /male/pilot
+    plink2 --bfile pilot --geno-counts --keep-females --out /female/pilot
+    
+    #Run sdMAF
+    Rscript sdMAF.R \
+            -f /female/pilot.gcount \
+            -m /male/pilot.gcount \
             --mac 10 \
-            -o pilot_test
+            -o /out/pilot_test \
+            -l /log/pilot_test
             
-    ########## sdMAF 0.0.2 ########## 
+    ########## sdMAF 0.0.3 ########## 
     An R based commend-line tool used to compute sex differences in allele frequencies.
     sdMAF is free and comes with ABSOLUTELY NO WARRANTY.
     Details of the method can be found at: 
     https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi  
     Copyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. 
     Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
+    #################################
     Checking if inputs are valid.
-    Autosomal/NPR region detected based on male genotype count file.
-    No bim file provided. OK unless ID column from genotype file not all in chr:bp:A1:A2 form.
+    Loading female gcount file found from /female/pilot.txt.
+    198380 samples detected from female gcount file.
+    Number of SNPs by chromosome from female gcount file:
+          X 
+    3917799 
+    Loading male genotype count file found from /male/pilot.txt.
+    165243 samples detected from male gcount file.
+    Number of SNPs per chromosome from male gcount file:
+          X 
+    3917799 
+    3917799 chrX NPR SNPs detected.
+    0 autosomal/PAR SNPs detected.
+    0 missing SNPs detected. Don't worry it will be filtered out later.
+    No bim file provided. OK unless ID column from genotype file not all in CHR:BP:A1:A2 form.
+    ################################# 
     Input checkers all passed, now applying filters.
-    Keeping 571419 biallelic SNPs out of 613853 total SNPs from Input.
-    Keeping 51805 SNPs out of 571419 SNPs based on a minor allele count filter of 10.
+    Keeping 115459 biallelic SNPs out of 3917799 total SNPs from Input.
+    Keeping 63289 SNPs out of 115459 SNPs based on a sex combined minor allele count filter of 10.
+    ################################# 
     All filters applied, now computing sdMAF!
-    Now calculated 5% (2591/51805). 
-    Now calculated 10% (5181/51805).
-    Now calculated 15% (7771/51805). 
-    Now calculated 20% (10361/51805). 
-    Now calculated 25% (12952/51805). 
-    Now calculated 30% (15542/51805). 
-    Now calculated 35% (18132/51805). 
-    Now calculated 40% (20722/51805). 
-    Now calculated 45% (23313/51805). 
-    Now calculated 50% (25903/51805). 
-    Now calculated 55% (28493/51805). 
-    Now calculated 60% (31084/51805). 
-    Now calculated 65% (33674/51805). 
-    Now calculated 70% (36264/51805). 
-    Now calculated 75% (38854/51805). 
-    Now calculated 80% (41444/51805). 
-    Now calculated 85% (44035/51805). 
-    Now calculated 90% (46625/51805). 
-    Now calculated 95% (49215/51805). 
+    Now calculated 5% (3165/63289).
+    Now calculated 10% (6329/63289).
+    Now calculated 15% (9494/63289).
+    Now calculated 20% (12658/63289).
+    Now calculated 25% (15823/63289).
+    Now calculated 30% (18987/63289).
+    Now calculated 35% (22152/63289).
+    Now calculated 40% (25316/63289).
+    Now calculated 45% (28481/63289).
+    Now calculated 50% (31645/63289).
+    Now calculated 55% (34809/63289).
+    Now calculated 60% (37974/63289).
+    Now calculated 65% (41138/63289).
+    Now calculated 70% (44303/63289).
+    Now calculated 75% (47467/63289).
+    Now calculated 80% (50632/63289).
+    Now calculated 85% (53796/63289).
+    Now calculated 90% (56961/63289).
+    Now calculated 95% (60125/63289).
     Finito !
-    Writing results to pilot_test.sdMAF and logs to pilot_test_sdMAF.log.
+    63289 total SNPs in results.
+    63289 were chrX NPR SNPs.
+    0 were autosomal/PAR SNPs.
+    Number of SNPs by chromosome table:
+
+        X 
+    63289 
+    Writing results to /out/pilot_test.sdMAF and logs to /log/pilot_test_sdMAF.log
+
+    
+    
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
