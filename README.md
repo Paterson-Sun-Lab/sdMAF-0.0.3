@@ -82,8 +82,8 @@ We will batch run entire genome.
     module load R
 
     Rscript sdMAF.R \
-    -f /YourMaleGcountFolder/chr${chr} \
-    -m /YourMaleGcountFolder/chr${chr} \
+    -f /YourMaleGcountFolder/chr${chr}.gcount \
+    -m /YourMaleGcountFolder/chr${chr}.gcount \
     --mac 10 \
     -o /YourOutFolder/OutFileNamechr${chr} \
     -l /YourLogFolder/LogFileNamechr${chr}
