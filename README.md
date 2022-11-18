@@ -52,7 +52,7 @@ Only [gcount](https://www.cog-genomics.org/plink/2.0/formats#gcount:~:text=FST%2
     --multi-allelic       Indicate whether to keep multi-allelic SNPs in the
                           results or not. Default FALSE.
     --sex-specific        Include to use sex specific minimum allele count
-                        filter for both males and females.
+                          filter for both males and females.
     --mac <minimum count>
                           Minimum allele count filter. Default 5.
 
@@ -60,7 +60,7 @@ Only [gcount](https://www.cog-genomics.org/plink/2.0/formats#gcount:~:text=FST%2
 
 We will batch run entire genome.
     
-    #### make your own Analysis.sh file by filling in these address
+    ####Make your own Analysis.sh file by filling in these address.
 
     #PBS -l vmem=30g,mem=30g
     #PBS -l walltime=24:00:00
@@ -68,7 +68,6 @@ We will batch run entire genome.
     #PBS -o /YourOutFolder
     #PBS -e /YourErrorFolder
 
-    #change to current work directory
     cd /YourWorkDirectory
 
     chr=$PARAM1
@@ -103,7 +102,7 @@ We will batch run entire genome.
     qsub  -v PARAM1=X Analysis.sh
     qsub  -v PARAM1=XY Analysis.sh
 
-    #Merging Results After All Batch Jobs Completed
+    #Merging Results After All Batch Jobs Completed.
     let a=1
     head -n 1 /YourOutFolder/OutFileNamechr${a}.sdMAF > header.txt
     while [ $a -le 22 ]
@@ -118,11 +117,11 @@ We will batch run entire genome.
     
 ## Example 
 
-    #Use plink to produce gcount files
+    #Use plink to produce gcount files.
     plink2 --bfile pilot --geno-counts --keep-males --out /male/pilot
     plink2 --bfile pilot --geno-counts --keep-females --out /female/pilot
     
-    #Run sdMAF
+    #Run sdMAF.
     Rscript sdMAF.R \
             -f /female/pilot.gcount \
             -m /male/pilot.gcount \
