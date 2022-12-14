@@ -1,6 +1,6 @@
 # sdMAF 0.0.3 Manual
 
-sdMAF 0.0.3 is a R based commend-line tool used to compute sex differences in allele frequencies. 
+sdMAF 0.0.3 is a R based command-line tool used to compute sex differences in allele frequencies. 
 
 sdMAF is free and comes with ABSOLUTELY NO WARRANTY. 
 
