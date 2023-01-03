@@ -1,5 +1,7 @@
 # sdMAF 0.0.3 Manual
 
+![alt text](https://github.com/zeyachen/sdMAF/blob/main/sdMAF.png)
+
 ## Introduction
 We developed a R based command-line computational tool sdMAF - a robust and easy-to-use software for analysis of sex differences in allele frequencies. The initial aim was to scale the analysis in the *“Major sex differences in allele frequencies for X chromosomal variants in both the 1000 Genomes Project and gnomAD”*<sup>1</sup> to the genomic data of the UK Biobank<sup>2</sup>. It handled these data sets with ease, and significantly reduced analysis time compared to running the pipeline manually. With an extra layer of bash scripting, sdMAF can batch process the entire genome by chromosome in a parallel fashion. Users provide PLINK readable genotype calls files; subsequently, sdMAF does input checking, filtering, computing, and detailed logging. 
 
@@ -11,22 +13,6 @@ Details of the method can be found [here](https://journals.plos.org/plosgenetics
 Copyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. 
 
 Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
-
-## Work Flow Chart
-
-![alt text](https://github.com/zeyachen/sdMAF/blob/main/sdMAF.png)
-
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
