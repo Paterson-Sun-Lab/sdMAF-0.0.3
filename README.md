@@ -10,7 +10,7 @@ sdMAF accepts a mixture of Pseudo-Autosomal Region (or Autosomal)/Non-Pseudo-Aut
 
 Details of the method can be found [here](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi). 
 
-Copyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. 
+Copyright 2022 Desmond Z. Chen, Zhong Wang, Delnaz Roshandel, Lei Sun & Andrew D. Paterson. 
 
 Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
 
@@ -49,6 +49,28 @@ Only [gcount](https://www.cog-genomics.org/plink/2.0/formats#gcount:~:text=FST%2
                           Sex combined minimum allele count filter. Variant with
                           minor allele count less than input will be filtered
                           out. Default 5.
+
+## Output Column
+
+### Produced by PLINK
+* CHROM	- Chromosome Code 
+* ID	- Variant ID
+* A1	- Reference Allele
+* A2	- Alternative Allele
+* BP	- Base-pair Postion from genotype calls files
+* Mmissing	- Number of missing genotypes per SNP in males
+* Fmissing	- Number of missing genotypes per SNP in female
+* F_A1A1	- Female Homozygous Reference Count per SNP
+* F_A1A2	- Female Heterozygous Ref-Alt Count per SNP
+* F_A2A2	- Female Homozygous Alternative Count per SNP
+* M_A1A1.A1	- Male Homozygous/Haploid Reference Count per SNP
+* M_A1A2	- Male Heterozygous Ref-Alt Count per SNP
+* M_A2A2.A2	- Male Homozygous/Haploid Alternative Count per SNP
+### Produced by sdMAF
+* LOG10P	- Log<sub>10</sub> transformed P-Value 
+* Ffreq	- Female Alt Allele Frequency
+* Mfreq	- Male Alt Allele Frequency
+* DIFmaf - Female - Male Frequency Difference of Sex Combined Minor Allele  
 
 ## Quick Start-Up Guide
 
@@ -187,11 +209,9 @@ All job commends are under Moab/Torque environment.
 
 
 ## References
-    1. Wang, Zhong et al. “Major sex differences in allele frequencies for X chromosomal variants in both the 1000 Genomes Project and     gnomAD.” PLoS genetics vol. 18,5 e1010231. 31 May. 2022, doi:10.1371/journal.pgen.1010231
-    2. Genome-wide genetic data on ~500,000 UK Biobank participants
-    Clare Bycroft, Colin Freeman, Desislava Petkova, Gavin Band, Lloyd T. Elliott, Kevin Sharp, Allan Motyer, Damjan Vukcevic, Olivier     Delaneau, Jared O’Connell, Adrian Cortes, Samantha Welsh, Gil McVean, Stephen Leslie, Peter Donnelly, Jonathan Marchini
-    bioRxiv 166298; doi: https://doi.org/10.1101/166298
-    3. Trevor L Davis (2022). argparse: Command Line Optional and Positional Argument Parser. R package version 2.1.6. https://CRAN.R-     project.org/package=argparse
+1. Wang, Zhong et al. “Major sex differences in allele frequencies for X chromosomal variants in both the 1000 Genomes Project and     gnomAD.” PLoS genetics vol. 18,5 e1010231. 31 May. 2022, doi:10.1371/journal.pgen.1010231
+2. Genome-wide genetic data on ~500,000 UK Biobank participants Clare Bycroft, Colin Freeman, Desislava Petkova, Gavin Band, Lloyd T. Elliott, Kevin Sharp, Allan Motyer, Damjan Vukcevic, Olivier     Delaneau, Jared O’Connell, Adrian Cortes, Samantha Welsh, Gil McVean, Stephen Leslie, Peter Donnelly, Jonathan Marchini bioRxiv 166298; doi: https://doi.org/10.1101/166298
+3. Trevor L Davis (2022). argparse: Command Line Optional and Positional Argument Parser. R package version 2.1.6. https://CRAN.R-project.org/package=argparse
     
     
 
