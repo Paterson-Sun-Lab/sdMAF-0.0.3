@@ -1,14 +1,20 @@
 # sdMAF 0.0.3 Manual
 
-sdMAF 0.0.3 is a R based command-line tool used to compute sex differences in allele frequencies. 
+## Introduction
+We developed a R based command-line computational tool sdMAF - a robust and easy-to-use software for analysis of sex differences in allele frequencies. The initial aim was to scale the analysis in the “Major sex differences in allele frequencies for X chromosomal variants in both the 1000 Genomes Project and gnomAD”<sup>1</sup> to the genomic data of the UK Biobank<sup>2</sup>. It handled these data sets with ease, and significantly reduced analysis time compared to running the pipeline manually. With an extra layer of bash scripting, sdMAF can batch process the entire genome by chromosome in a parallel fashion. Users provide PLINK readable genotype calls files; subsequently, sdMAF does input checking, filtering, computing, and detailed logging. 
 
-sdMAF is free and comes with ABSOLUTELY NO WARRANTY. 
+sdMAF accepts a mixture of Pseudo-Autosomal Region (or Autosomal)/Non-Pseudo-Autosomal Region SNPs and automatically assigns the appropriate statistical test during computing. With the help of argparse R package<sup>3</sup>, sdMAF was able to provide a user-friendly command line interface. Each argument is clearly explained using the help option. 
+ 
 
 Details of the method can be found [here](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi). 
 
 Copyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. 
 
 Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
+
+## Work Flow Chart
+
+![alt text](https://github.com/zeyachen/sdMAF/blob/main/sdMAF.png)
 
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
@@ -193,6 +199,13 @@ All job commends are under Moab/Torque environment.
     63289 
     Writing results to /out/pilot_test.sdMAF and logs to /log/pilot_test_sdMAF.log
 
+
+## References
+    1. Wang, Zhong et al. “Major sex differences in allele frequencies for X chromosomal variants in both the 1000 Genomes Project and     gnomAD.” PLoS genetics vol. 18,5 e1010231. 31 May. 2022, doi:10.1371/journal.pgen.1010231
+    2. Genome-wide genetic data on ~500,000 UK Biobank participants
+    Clare Bycroft, Colin Freeman, Desislava Petkova, Gavin Band, Lloyd T. Elliott, Kevin Sharp, Allan Motyer, Damjan Vukcevic, Olivier     Delaneau, Jared O’Connell, Adrian Cortes, Samantha Welsh, Gil McVean, Stephen Leslie, Peter Donnelly, Jonathan Marchini
+    bioRxiv 166298; doi: https://doi.org/10.1101/166298
+    3. Trevor L Davis (2022). argparse: Command Line Optional and Positional Argument Parser. R package version 2.1.6. https://CRAN.R-     project.org/package=argparse
     
     
 
