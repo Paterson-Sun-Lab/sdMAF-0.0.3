@@ -1,6 +1,6 @@
 # sdMAF 0.0.3 Manual
 
-![alt text](https://github.com/zeyachen/sdMAF/blob/main/sdMAF.png)
+![alt text](https://github.com/zeyachen/sdMAF/blob/main/sdMAF1.png)
 
 ## Introduction
 We developed a R based command-line computational tool sdMAF - a robust and easy-to-use software for analysis of sex differences in allele frequencies. The initial aim was to scale the analysis in the *“Major sex differences in allele frequencies for X chromosomal variants in both the 1000 Genomes Project and gnomAD”*<sup>1</sup> to the genomic data of the UK Biobank<sup>2</sup>. It handled these data sets with ease, and significantly reduced analysis time compared to running the pipeline manually. With an extra layer of bash scripting, sdMAF can batch process the entire genome by chromosome in a parallel fashion. Users provide PLINK readable genotype calls files; subsequently, sdMAF does input checking, filtering, computing, and detailed logging. 
