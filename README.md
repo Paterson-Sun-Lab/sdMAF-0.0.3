@@ -71,7 +71,7 @@ Only [gcount](https://www.cog-genomics.org/plink/2.0/formats#gcount:~:text=FST%2
 * Ffreq	- Female Alt Allele Frequency
 * Mfreq	- Male Alt Allele Frequency
 * DIFmaf - Female - Male Frequency Difference of Sex Combined Minor Allele
-* ### Produced by sdMISSING
+### Produced by sdMISSING
 * sdMISSING	- Female - Male Difference of Missing Rate 
 * Pmissing	- Log<sub>10</sub> transformed P-Value from Fisher's Exact test
 
