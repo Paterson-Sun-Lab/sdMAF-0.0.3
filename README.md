@@ -10,7 +10,7 @@ sdMAF accepts a mixture of Pseudo-Autosomal Region (or Autosomal)/Non-Pseudo-Aut
 
 Details of the method can be found [here](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi). 
 
-Copyright 2022 Desmond Z. Chen, Zhong Wang, Delnaz Roshandel, Lei Sun & Andrew D. Paterson. 
+Copyright (Chen et al.,2022) 
 
 Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
 
@@ -70,7 +70,10 @@ Only [gcount](https://www.cog-genomics.org/plink/2.0/formats#gcount:~:text=FST%2
 * LOG10P	- Log<sub>10</sub> transformed P-Value 
 * Ffreq	- Female Alt Allele Frequency
 * Mfreq	- Male Alt Allele Frequency
-* DIFmaf - Female - Male Frequency Difference of Sex Combined Minor Allele  
+* DIFmaf - Female - Male Frequency Difference of Sex Combined Minor Allele
+* ### Produced by sdMISSING
+* sdMISSING	- Female - Male Difference of Missing Rate 
+* Pmissing	- Log<sub>10</sub> transformed P-Value from Fisher's Exact test
 
 ## Quick Start-Up Guide
 
@@ -207,6 +210,9 @@ All job commends are under Moab/Torque environment.
     63289 
     Writing results to /out/pilot_test.sdMAF and logs to /log/pilot_test_sdMAF.log
 
+## sdMISSING
+A complementray tool to the sdMAF which would only run on sdMAF processed results. To use it, you simply have to provide address of the sdMAF results file and indicate the output result file address. Example:
+    Rscript .../sdMISSING.R .../pilot_test.sdMAF .../pilot_test.sdMISSING
 
 ## References
 1. Wang, Zhong et al. “Major sex differences in allele frequencies for X chromosomal variants in both the 1000 Genomes Project and     gnomAD.” PLoS genetics vol. 18,5 e1010231. 31 May. 2022, doi:10.1371/journal.pgen.1010231
