@@ -22,7 +22,7 @@ suppressPackageStartupMessages(library("argparse"))
 parser <- ArgumentParser(
   prog="sdMAF",
   description=paste0("sdMAF ",.VERSION," is a R based commend-line tool used to compute sex differences in allele frequencies. sdMAF is free and comes with ABSOLUTELY NO WARRANTY. Details of the method can be found https://journals.plos.org/plosgenetics/article/authors?id=10.1371/journal.pgen.1010231"),
-  epilog="Copyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. Report bugs to zeya [dot] chen [at] sickkids [dot] ca"
+  epilog="Copyright 2022 Chen et al.. Report bugs to zeya [dot] chen [at] sickkids [dot] ca"
   )
 
 
@@ -235,8 +235,8 @@ cat(paste0("############################## \nAll filters applied, now computing 
 # computing p value for sdMAF 
 chromwithP <- loop_func(chrom)
 
-chromwithP$Mmissing <- ma$MISSING_CT[match(chromwithP$ID,ma$ID)]
 chromwithP$Fmissing <- fe$MISSING_CT[match(chromwithP$ID,fe$ID)]
+chromwithP$Mmissing <- ma$MISSING_CT[match(chromwithP$ID,ma$ID)]
 chromwithP <- chromwithP[,c(1:4,11,13:14,5:10,12)] #rearrange
 
 # compute allele frequency
