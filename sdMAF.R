@@ -22,7 +22,7 @@ suppressPackageStartupMessages(library("argparse"))
 parser <- ArgumentParser(
   prog="sdMAF",
   description=paste0("sdMAF ",.VERSION," is a R based commend-line tool used to compute sex differences in allele frequencies. sdMAF is free and comes with ABSOLUTELY NO WARRANTY. Details of the method can be found https://journals.plos.org/plosgenetics/article/authors?id=10.1371/journal.pgen.1010231"),
-  epilog="Copyright 2022 Chen et al.. Report bugs to zeya [dot] chen [at] sickkids [dot] ca"
+  epilog="Citation: Chen et al., Comprehensive whole-genome analyses of the UK Biobank reveal significant sex differences in both genotype missingness and allele frequency on the X chromosome, Human Molecular Genetics, 2023;, ddad201, https://doi.org/10.1093/hmg/ddad201. Report bugs to zeya [dot] chen [at] sickkids [dot] ca"
   )
 
 
