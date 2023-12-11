@@ -103,7 +103,7 @@ All job commends are under Moab/Torque environment.
     module load R
 
     Rscript sdMAF.R \
-    -f /YourMaleGcountFolder/chr${chr}.gcount \
+    -f /YourFemaleGcountFolder/chr${chr}.gcount \
     -m /YourMaleGcountFolder/chr${chr}.gcount \
     --mac 10 \
     -o /YourOutFolder/OutFileNamechr${chr} \
