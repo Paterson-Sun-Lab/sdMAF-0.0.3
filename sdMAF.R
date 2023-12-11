@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 # Copyright 2022 Zeya Chen <zeya.chen@sickkids.ca>, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson 
-#
+# Citation: Desmond Zeya Chen, Delnaz Roshandel, Zhong Wang, Lei Sun, Andrew D Paterson, Comprehensive whole-genome analyses of the UK Biobank reveal significant sex differences in both genotype missingness and allele frequency on the X chromosome, Human Molecular Genetics, 2023;, ddad201, https://doi.org/10.1093/hmg/ddad201
 #  This file is free software: you may copy, redistribute and/or modify it  
 #  under the terms of the GNU General Public License as published by the  
 #  Free Software Foundation, either version 2 of the License, or (at your  
