@@ -12,6 +12,8 @@ Details of the method can be found [here](https://journals.plos.org/plosgenetics
 
 Copyright (Chen et al.,2022) 
 
+Citation: Desmond Zeya Chen, Delnaz Roshandel, Zhong Wang, Lei Sun, Andrew D Paterson, Comprehensive whole-genome analyses of the UK Biobank reveal significant sex differences in both genotype missingness and allele frequency on the X chromosome, Human Molecular Genetics, 2023;, ddad201, https://doi.org/10.1093/hmg/ddad201
+
 Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
 
 <!-- USAGE EXAMPLES -->
