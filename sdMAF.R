@@ -190,6 +190,7 @@ chrom <- fe[,1:7]
 chrom$M_A1A1.A1 <- ifelse(NPRs,ma[,8],ma[,5])
 chrom$M_A1A2 <- ifelse(NPRs,NA,ma[,6])
 chrom$M_A2A2.A2 <- ifelse(NPRs,ma[,9],ma[,7])
+names(chrom)[3:10] <- c("A1","A2","F_A1A1","F_A1A2","F_A2A2","M_A1A1.A1","M_A1A2","M_A2A2.A2")
 
 if (is.null(args$bim)) {
   cat(paste0("No bim file provided. OK unless ID column from genotype file not all in chr:bp:A1:A2 form.","\n"))
@@ -202,15 +203,12 @@ if (is.null(args$bim)) {
   }
 } 
 
-names(chrom)[3:10] <- c("A1","A2","F_A1A1","F_A1A2","F_A2A2","M_A1A1.A1","M_A1A2","M_A2A2.A2")
-cat(paste0("############################## \nInput checkers all passed, now applying filters.","\n"))
-
-
 if (!is.null(args$bim)) {
   if (ncol(ch) == 1) {
     chrom$BP <- ch$V1
   } else {chrom$BP <- ch$V4} # add BP to results from bim file
 } else {chrom$BP <- sapply(strsplit(chrom$ID,":"), `[`, 2)} # get BP from ID
+cat(paste0("############################## \nInput checkers all passed, now applying filters.","\n"))
 
 #filter for only biallelic variants
 if (isTRUE(args[["multi_allelic"]])){
