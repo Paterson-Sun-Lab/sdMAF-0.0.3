@@ -186,10 +186,11 @@ loop_func <- function(df){
 }
 
 # merge fe and ma to one data frame
-chrom <- fe[,1:7]
-chrom$M_A1A1.A1 <- ifelse(NPRs,ma[,8],ma[,5])
-chrom$M_A1A2 <- ifelse(NPRs,NA,ma[,6])
-chrom$M_A2A2.A2 <- ifelse(NPRs,ma[,9],ma[,7])
+chrom <- fe[,c("CHROM", "ID", "REF", "ALT", "HOM_REF_CT", "HET_REF_ALT_CTS", 
+"TWO_ALT_GENO_CTS")]
+chrom$M_A1A1.A1 <- ifelse(NPRs,ma$HAP_REF_CT,ma$HOM_REF_CT)
+chrom$M_A1A2 <- ifelse(NPRs,NA,ma$HET_REF_ALT_CTS)
+chrom$M_A2A2.A2 <- ifelse(NPRs,ma$HAP_ALT_CTS,ma$TWO_ALT_GENO_CTS)
 names(chrom)[3:10] <- c("A1","A2","F_A1A1","F_A1A2","F_A2A2","M_A1A1.A1","M_A1A2","M_A2A2.A2")
 
 if (is.null(args$bim)) {
