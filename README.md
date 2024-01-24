@@ -3,7 +3,7 @@
 ![alt text](https://github.com/zeyachen/sdMAF/blob/main/sdMAF1.png)
 
 ## Introduction
-We developed a R based command-line computational tool sdMAF - a robust and easy-to-use software for analysis of sex differences in allele frequencies. The initial aim was to scale the analysis in the *“Major sex differences in allele frequencies for X chromosomal variants in both the 1000 Genomes Project and gnomAD”*<sup>1</sup> to the genomic data of the UK Biobank<sup>2</sup>. It handled these data sets with ease, and significantly reduced analysis time compared to running the pipeline manually. With an extra layer of bash scripting, sdMAF can batch process the entire genome by chromosome in a parallel fashion. Users provide PLINK readable genotype calls files; subsequently, sdMAF does input checking, filtering, computing, and detailed logging. 
+We developed a R based command-line computational tool sdMAF - a robust and easy-to-use software for analysis of sex differences in allele frequencies. The initial aim was to scale the analysis in the *“Major sex differences in allele frequencies for X chromosomal variants in both the 1000 Genomes Project and gnomAD”*<sup>1</sup> to the genomic data of the UK Biobank<sup>2</sup>. Resulting manuscript ["Comprehensive whole-genome analyses of the UK Biobank reveal significant sex differences in both genotype missingness and allele frequency on the X chromosome"](https://doi.org/10.1093/hmg/ddad201). It handled these data sets with ease, and significantly reduced analysis time compared to running the pipeline manually. With an extra layer of bash scripting, sdMAF can batch process the entire genome by chromosome in a parallel fashion. Users provide PLINK readable genotype calls files; subsequently, sdMAF does input checking, filtering, computing, and detailed logging. 
 
 sdMAF accepts a mixture of Pseudo-Autosomal Region (or Autosomal)/Non-Pseudo-Autosomal Region SNPs and automatically assigns the appropriate statistical test during computing. With the help of argparse R package<sup>3</sup>, sdMAF was able to provide a user-friendly command-line interface. Each argument is clearly explained using the help option. 
  
@@ -12,7 +12,7 @@ Details of the method can be found [here](https://journals.plos.org/plosgenetics
 
 Copyright (Chen et al.,2022) 
 
-Citation: Desmond Zeya Chen, Delnaz Roshandel, Zhong Wang, Lei Sun, Andrew D Paterson, Comprehensive whole-genome analyses of the UK Biobank reveal significant sex differences in both genotype missingness and allele frequency on the X chromosome, Human Molecular Genetics, 2023;, ddad201, https://doi.org/10.1093/hmg/ddad201
+Citation: Chen DZ, Roshandel D, Wang Z, Sun L, Paterson AD, Comprehensive whole-genome analyses of the UK Biobank reveal significant sex differences in both genotype missingness and allele frequency on the X chromosome, Human Molecular Genetics, 2023;, ddad201, [https://doi.org/10.1093/hmg/ddad201](https://doi.org/10.1093/hmg/ddad201)
 
 Report bugs to zeya [dot] chen [at] sickkids [dot] ca.
 
