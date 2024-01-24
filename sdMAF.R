@@ -70,7 +70,7 @@ if (is.null(args$log)){
 #Starts logging
 sink(logs.nm,split = T)
 
-cat(paste0("########## sdMAF ",.VERSION," ########## \nAn R based commend-line tool used to compute sex differences in allele frequencies.\nsdMAF is free and comes with ABSOLUTELY NO WARRANTY.\nDetails of the method can be found at: \nhttps://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010231#sec017:~:text=MAF%20between%20populations.-,1.1.%20sdMAF%20test.,-For%20each%20bi  \nCopyright 2022 Zeya Chen, Zhong Wang, Delnaz Roshandel, Lei Sun, Andrew D. Paterson. \nReport bugs to zeya [dot] chen [at] sickkids [dot] ca.\n"))
+cat(paste0("########## sdMAF ",.VERSION," ########## \nAn R based commend-line tool used to compute sex differences in allele frequencies.\nsdMAF is free and comes with ABSOLUTELY NO WARRANTY.\nCitation: Desmond Zeya Chen, Delnaz Roshandel, Zhong Wang, Lei Sun, Andrew D Paterson, Comprehensive whole-genome analyses of the UK Biobank reveal significant sex differences in both genotype missingness and allele frequency on the X chromosome, Human Molecular Genetics, 2023;, ddad201, https://doi.org/10.1093/hmg/ddad201 \nReport bugs to zeya [dot] chen [at] sickkids [dot] ca.\n"))
 
 # print version and exit early if  --version was passed
 if (isTRUE(args[["version"]])){
@@ -79,7 +79,7 @@ if (isTRUE(args[["version"]])){
     quit(save = "no", status = 0)
 }
 
-cat(paste0("##############################", "\nChecking if inputs are valid.","\n"))
+cat(paste0("Analysis started at ", Sys.time(),"\n##############################", "\nChecking if inputs are valid.","\n"))
 # print Error and exit early if no female genotype count found.
 if (!file.exists(args[["female"]])){
   cat(paste0("Error: no female genotype count file found at ",args[["female"]],".","\n"))
@@ -261,5 +261,6 @@ cat(paste0("Writing results to ",f.nm," and logs to ",logs.nm,"\n"))
 
 write.table(chromwithP, file = f, sep = "\t", quote = F, append=FALSE, row.names = FALSE, col.names=TRUE)
 
+cat(paste0("Analysis ended at ", Sys.time())
 sink()
 close(f)
